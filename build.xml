@@ -1,0 +1,75 @@
+<project name="Ant build" basedir=".">
+    <!-- ========== Initialize Properties =================================== -->
+    <!-- set global properties for build -->
+    <property name="basedir" value="." />
+    <property name="lib" value="${basedir}/lib" />
+    <property name="src" value="${basedir}/src" />
+    <property name="bin" value="${basedir}/bin" />
+    <property name="report-dir" value="${basedir}/Test-Report" />
+    <property name="testng-report-dir" value="${report-dir}/TestNGreport" />
+    <property name="ivy.install.version" value="2.1.0-rc2" />
+    <condition property="ivy.home" value="${env.IVY_HOME}">
+        <isset property="env.IVY_HOME" />
+    </condition>
+    <property name="ivy.home" value="${user.home}/.ant" />
+    <property name="ivy.jar.dir" value="${ivy.home}/lib" />
+    <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+
+    <!-- ====== Set the classpath ====  -->
+    <path id="classpath">
+        <pathelement location="${bin}" />
+        <fileset dir="${lib}">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <!-- Use Ivy on build only  -->
+    <target name="download-ivy" unless="offline">
+
+        <mkdir dir="${ivy.jar.dir}"/>
+        <!-- download Ivy from web site so that it can be used even without any special installation -->
+        <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+             dest="${ivy.jar.file}" usetimestamp="true"/>
+    </target>
+
+    <target name="init-ivy" depends="download-ivy">
+        <!-- try to load ivy here from ivy home, in case the user has not already dropped
+                it into ant's lib dir (note that the latter copy will always take precedence).
+                We will not fail as long as local lib dir exists (it may be empty) and
+                ivy is in at least one of ant's lib dir or the local lib dir. -->
+        <path id="ivy.lib.path">
+            <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml"
+                 uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    </target>
+
+    <!-- Delete directories  -->
+    <target name="delete-dir">
+        <delete dir="${bin}" />
+        <delete dir="${report-dir}" />
+    </target>
+
+    <!-- Creating directories -->
+    <target name="create" depends="delete-dir">
+        <mkdir dir="${bin}" />
+        <mkdir dir="${report-dir}" />
+    </target>
+
+    <!-- Compile the java code from ${src} into ${bin} -->
+    <target name="compile" depends="create,init-ivy">
+        <javac srcdir="${src}" classpathref="classpath" includeAntRuntime="No" destdir="${bin}" />
+        <echo> /* Compiled Directory Classes */ </echo>
+    </target>
+
+    <!-- Runs the file and generates Reportng report for TestNG-->
+    <taskdef name="testng" classname="org.testng.TestNGAntTask" classpathref="classpath" />
+
+    <target name="rest-template-testng-execution" depends="compile">
+        <mkdir dir="${testng-report-dir}" />
+        <testng outputdir="${testng-report-dir}" classpathref="classpath" useDefaultListeners="true">
+            <xmlfileset dir="${basedir}/suite" includes="webservices-testng-suite.xml" />
+        </testng>
+    </target>
+</project>
