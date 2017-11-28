@@ -1,9 +1,16 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Sample Test Suite">
-    <test name="Sample Test">
+<suite name="Webservices suite">
+
+    <test name="RestTemplate Test">
         <classes>
-            <class name="com.pack.one.TestA"/>
-            <class name="com.pack.two.TestB"/>
+            <class name="com.epam.test.RestTemplateServiceTest"/>
         </classes>
     </test>
+
+    <test name="HttpClient Test">
+        <classes>
+            <class name="com.epam.test.RestTemplateServiceTest"/>
+        </classes>
+    </test>
+
 </suite>
