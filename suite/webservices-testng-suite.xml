@@ -3,13 +3,13 @@
 
     <test name="RestTemplate Test">
         <classes>
-            <class name="com.epam.test.RestTemplateServiceTest"/>
+            <class name="test.java.RestTemplateServiceTest"/>
         </classes>
     </test>
 
     <test name="HttpClient Test">
         <classes>
-            <class name="com.epam.test.RestTemplateServiceTest"/>
+            <class name="test.java.RestTemplateServiceTest"/>
         </classes>
     </test>
 

@@ -1,8 +1,8 @@
-package com.epam.test;
+package test.java;
 
 import org.testng.annotations.Test;
 
-public class RestTemplateServiceTest {
+public class RestTemplateServiceTest extends BaseTest {
     @Test
     public void restTemplateTest() {
 
