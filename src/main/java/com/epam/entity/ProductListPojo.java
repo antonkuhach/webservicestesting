@@ -2,7 +2,9 @@ package main.java.com.epam.entity;
 
 import main.java.com.epam.list.ProductList;
 
-public class ProductListPojo {
+import java.io.Serializable;
+
+public class ProductListPojo implements Serializable {
     private ProductList productList;
 
     public ProductList getProductList()
@@ -18,6 +20,6 @@ public class ProductListPojo {
     @Override
     public String toString()
     {
-        return "ClassPojo [ProductList = " + productList + "]";
+        return "ProductList:\n" + productList.toString();
     }
 }

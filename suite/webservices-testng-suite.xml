@@ -7,10 +7,4 @@
         </classes>
     </test>
 
-    <test name="HttpClient Test">
-        <classes>
-            <class name="test.java.RestTemplateServiceTest"/>
-        </classes>
-    </test>
-
 </suite>

@@ -1,6 +1,8 @@
 package main.java.com.epam.entity;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
     private String content;
 
     public String getContent ()
@@ -16,6 +18,6 @@ public class Product {
     @Override
     public String toString()
     {
-        return "ClassPojo [content = " + content + "]";
+        return "Product content: " + content + "\n";
     }
 }

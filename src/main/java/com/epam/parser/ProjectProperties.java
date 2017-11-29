@@ -14,7 +14,7 @@ public class ProjectProperties {
     private static void init() {
         properties = new java.util.Properties();
         try {
-            properties.load(new FileInputStream("ant/env/default.properties"));
+            properties.load(new FileInputStream("default.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
