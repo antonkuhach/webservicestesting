@@ -13,6 +13,8 @@ import org.apache.http.util.EntityUtils;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class HttpClientService {
@@ -35,8 +37,7 @@ public class HttpClientService {
             XMLService.validateXmlStringAgainstXSD(body);
             JAXBContext jaxbContext = JAXBContext.newInstance(ProductList.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            httpResponse = httpClient.execute(httpGet);
-            productList = (ProductList) jaxbUnmarshaller.unmarshal(httpResponse.getEntity().getContent());
+            productList = (ProductList) jaxbUnmarshaller.unmarshal(new StreamSource(new ByteArrayInputStream(body.getBytes())));
         } catch (JAXBException | IOException ex) {
             ex.printStackTrace();
         }

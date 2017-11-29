@@ -1,13 +1,14 @@
 package test.java;
 
+import main.java.com.epam.list.ProductList;
 import main.java.com.epam.service.RestTemplateService;
-import main.java.com.epam.service.XMLService;
-import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class RestTemplateServiceTest extends BaseTest {
     private RestTemplateService restTemplateService;
+    private ProductList productList;
 
     @BeforeClass
     public void setup() {
@@ -16,11 +17,8 @@ public class RestTemplateServiceTest extends BaseTest {
 
     @Test
     public void restTemplateTest() {
-        restTemplateService = new RestTemplateService();
-        String objString = restTemplateService.getResponseEntityAsString();
-        System.out.println(objString);
-        XMLService.validateXmlStringAgainstXSD(objString);
-        System.out.println(restTemplateService.getProductList());
+        productList = restTemplateService.getProductListFromResponseBody();
+        System.out.println(productList.toString());
         Assert.assertTrue(true);
     }
 

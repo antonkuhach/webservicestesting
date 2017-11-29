@@ -3,17 +3,8 @@ package main.java.com.epam.service;
 import main.java.com.epam.entity.Product;
 import main.java.com.epam.list.ProductList;
 import main.java.com.epam.parser.ProjectProperties;
-import org.json.JSONObject;
-import org.json.XML;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import java.io.ByteArrayInputStream;
 
 public class RestTemplateService {
     private RestTemplate restTemplate;
@@ -26,35 +17,43 @@ public class RestTemplateService {
         this.restTemplate = restTemplate;
     }
 
-    public ProductList getProductList() {
-        ProductList productList = new ProductList();
-        HttpEntity<String> response;
-        JSONObject jsonObject;
+    public ProductList getProductListFromResponseBody() {
+        ProductList productList;
 
-        try {
-            response = restTemplate.getForEntity(ProjectProperties.getProperties().getProperty("sut.url"),
-                    String.class);
-            JAXBContext jaxbContext = JAXBContext.newInstance(ProductList.class, Product.class);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            productList = (ProductList) jaxbUnmarshaller.unmarshal(
-                    new StreamSource(new ByteArrayInputStream(response.getBody().getBytes())));
-        } catch (JAXBException ex) {
-            ex.printStackTrace();
+        productList = restTemplate.getForObject(ProjectProperties.getProperties().getProperty("sut.url"), ProductList.class);
+        for(int i = 0; i < productList.getProducts().size(); i++) {
+            productList.getProducts().set(i, getProductFromResponseBody(i));
         }
-
-        response = restTemplate.getForEntity(ProjectProperties.getProperties().getProperty("sut.url"), String.class);
-        jsonObject = XML.toJSONObject(response.getBody());
-        System.out.println(jsonObject);
 
         return productList;
     }
 
-    public ProductList getProductList(String url) {
+    public ProductList getProductListFromResponseBody(String url) {
         ProductList productList;
 
         productList = restTemplate.getForObject(url, ProductList.class);
+        for(int i = 0; i < productList.getProducts().size(); i++) {
+            productList.getProducts().set(i, getProductFromResponseBody(i));
+        }
 
         return productList;
+    }
+
+    public Product getProductFromResponseBody(int index) {
+        Product product;
+
+        product = restTemplate.getForObject(
+                ProjectProperties.getProperties().getProperty("sut.url") + "/" + index, Product.class);
+
+        return product;
+    }
+
+    public Product getProductFromResponseBody(String url) {
+        Product product;
+
+        product = restTemplate.getForObject(url, Product.class);
+
+        return product;
     }
 
     public String getResponseEntityAsString() {
@@ -74,6 +73,4 @@ public class RestTemplateService {
 
         return response;
     }
-
-
 }

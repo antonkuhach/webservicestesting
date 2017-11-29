@@ -8,17 +8,19 @@ import java.util.List;
 
 @XmlSeeAlso(Product.class)
 @XmlRootElement(name = "PRODUCTList")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ProductList implements Serializable {
-    private List<Product> product;
+    @XmlElement(name = "PRODUCT")
+    private List<Product> products;
 
-    public List<Product> getProduct()
+    public List<Product> getProducts()
     {
-        return product;
+        return products;
     }
 
-    public void setProduct(List<Product> product)
+    public void setProducts(List<Product> products)
     {
-        this.product = product;
+        this.products = products;
     }
 
     @Override
@@ -26,8 +28,8 @@ public class ProductList implements Serializable {
     {
         StringBuffer result = new StringBuffer();
 
-        for(int i = 0; i < product.size(); i++) {
-            result.append(product.get(i).toString());
+        for(int i = 0; i < products.size(); i++) {
+            result.append(products.get(i).toString()).append("\n");
         }
 
         return result.toString();

@@ -6,30 +6,46 @@ import java.io.Serializable;
 @XmlRootElement(name = "PRODUCT")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Product implements Serializable {
-    private String content;
-    private String href;
+    @XmlElement(name = "ID")
+    private int id;
+    @XmlElement(name = "NAME")
+    private String name;
+    @XmlElement(name = "PRICE")
+    private double price;
 
-    public String getContent ()
-    {
-        return content;
+    public int getId() {
+        return id;
     }
 
-    public void setContent (String content)
-    {
-        this.content = content;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getHref() {
-        return href;
+    public String getName() {
+        return name;
     }
 
-    public void setHref(String href) {
-        this.href = href;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     @Override
     public String toString()
     {
-        return "Product content: " + content + ". Link: "+ href + "\n";
+        StringBuffer result = new StringBuffer();
+
+        result.append("Product '").append(name)
+                .append("' id: ").append(id)
+                .append(". Price: ").append(price);
+
+        return result.toString();
     }
 }
