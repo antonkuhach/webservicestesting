@@ -6,5 +6,6 @@
         <dependency org="com.caucho" name="hessian" rev="4.0.7" />
         <dependency org="javax.xml" name="jaxb-api" rev="2.1"/>
         <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.5.3"/>
+        <dependency org="org.json" name="json" rev="20171018"/>
     </dependencies>
 </ivy-module>

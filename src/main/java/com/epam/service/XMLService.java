@@ -1,73 +1,36 @@
 package main.java.com.epam.service;
 
+import main.java.com.epam.list.ProductList;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 public class XMLService {
 
-    public static boolean validateAgainstXSD(InputStream xml, InputStream xsd)
+    public static void validateXmlStringAgainstXSD(String xml)
     {
-        try
-        {
-            SchemaFactory factory =
-                    SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(xsd));
-            Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(xml));
-            return true;
-        }
-        catch(Exception ex)
-        {
-            return false;
+        final String SCHEMA_LOCATION = "data/product-list-pojo-schema.xsd";
+        final String ROOT_ELEMENT = "PRODUCTList";
+
+        try {
+            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = schemaFactory.newSchema(new File(SCHEMA_LOCATION));
+            JAXBContext jc = JAXBContext.newInstance(ProductList.class);
+            JAXBElement<String> jaxbElement = new JAXBElement(new QName(ROOT_ELEMENT), String.class, xml);
+            Marshaller marshaller = jc.createMarshaller();
+            marshaller.setSchema(schema);
+            marshaller.marshal(jaxbElement, new DefaultHandler());
+        } catch (JAXBException | SAXException ex) {
+            ex.printStackTrace();
         }
     }
-
-    public static boolean validateAgainstProductListPojoXSD(InputStream xml)
-    {
-        final String PRODUCT_LIST_POJO_SCHEMA_PATH = "data/product-list-pojo-schema.xsd";
-
-        try
-        {
-            SchemaFactory factory =
-                    SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(new File(PRODUCT_LIST_POJO_SCHEMA_PATH)));
-            Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(xml));
-            return true;
-        }
-        catch(Exception ex)
-        {
-            return false;
-        }
-    }
-
-    public static boolean validateAgainstProductListPojoXSD(String objectAsString)
-    {
-        InputStream xml;
-        final String PRODUCT_LIST_POJO_SCHEMA_PATH = "data/product-list-pojo-schema.xsd";
-
-        try
-        {
-            xml = new ByteArrayInputStream(objectAsString.getBytes(StandardCharsets.UTF_8.name()));
-            SchemaFactory factory =
-                    SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(new File(PRODUCT_LIST_POJO_SCHEMA_PATH)));
-            Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(xml));
-            return true;
-        }
-        catch(Exception ex)
-        {
-            return false;
-        }
-    }
-
-
 }

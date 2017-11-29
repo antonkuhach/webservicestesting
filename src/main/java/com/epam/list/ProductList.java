@@ -2,17 +2,21 @@ package main.java.com.epam.list;
 
 import main.java.com.epam.entity.Product;
 
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.List;
 
+@XmlSeeAlso(Product.class)
+@XmlRootElement(name = "PRODUCTList")
 public class ProductList implements Serializable {
-    private Product[] product;
+    private List<Product> product;
 
-    public Product[] getProduct()
+    public List<Product> getProduct()
     {
         return product;
     }
 
-    public void setProduct(Product[] product)
+    public void setProduct(List<Product> product)
     {
         this.product = product;
     }
@@ -22,8 +26,8 @@ public class ProductList implements Serializable {
     {
         StringBuffer result = new StringBuffer();
 
-        for(int i = 0; i < product.length; i++) {
-            result.append(product[i].toString());
+        for(int i = 0; i < product.size(); i++) {
+            result.append(product.get(i).toString());
         }
 
         return result.toString();
