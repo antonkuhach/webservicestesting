@@ -1,5 +1,6 @@
 package main.java.com.epam.service;
 
+import main.java.com.epam.entity.Product;
 import main.java.com.epam.list.ProductList;
 import main.java.com.epam.parser.ProjectProperties;
 import org.apache.http.HttpEntity;
@@ -34,7 +35,7 @@ public class HttpClientService {
             httpResponse = httpClient.execute(httpGet);
             httpEntity = httpResponse.getEntity();
             body = EntityUtils.toString(httpEntity);
-            XMLService.validateXmlStringAgainstXSD(body);
+            XMLService.validateProjectListXmlStringAgainstXSD(body);
             JAXBContext jaxbContext = JAXBContext.newInstance(ProductList.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             productList = (ProductList) jaxbUnmarshaller.unmarshal(new StreamSource(new ByteArrayInputStream(body.getBytes())));
@@ -56,7 +57,7 @@ public class HttpClientService {
             httpResponse = httpClient.execute(httpGet);
             httpEntity = httpResponse.getEntity();
             body = EntityUtils.toString(httpEntity);
-            XMLService.validateXmlStringAgainstXSD(body);
+            XMLService.validateProjectListXmlStringAgainstXSD(body);
             JAXBContext jaxbContext = JAXBContext.newInstance(ProductList.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             httpResponse = httpClient.execute(httpGet);
@@ -66,5 +67,51 @@ public class HttpClientService {
         }
 
         return productList;
+    }
+
+    public Product getProductFromValidatedGetResponse(int index) {
+        Product product = new Product();
+        HttpEntity httpEntity;
+        String body;
+
+        httpClient = HttpClients.createDefault();
+        try {
+            httpGet = new HttpGet(ProjectProperties.getProperties().getProperty("sut.url") + "/" + index);
+            httpResponse = httpClient.execute(httpGet);
+            httpEntity = httpResponse.getEntity();
+            body = EntityUtils.toString(httpEntity);
+            XMLService.validateProjectListXmlStringAgainstXSD(body);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Product.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            httpResponse = httpClient.execute(httpGet);
+            product = (Product) jaxbUnmarshaller.unmarshal(httpResponse.getEntity().getContent());
+        } catch (JAXBException | IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return product;
+    }
+
+    public Product getProductFromValidatedGetResponse(String url, int index) {
+        Product product = new Product();
+        HttpEntity httpEntity;
+        String body;
+
+        httpClient = HttpClients.createDefault();
+        try {
+            httpGet = new HttpGet(url + "/" + index);
+            httpResponse = httpClient.execute(httpGet);
+            httpEntity = httpResponse.getEntity();
+            body = EntityUtils.toString(httpEntity);
+            XMLService.validateProjectListXmlStringAgainstXSD(body);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Product.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            httpResponse = httpClient.execute(httpGet);
+            product = (Product) jaxbUnmarshaller.unmarshal(httpResponse.getEntity().getContent());
+        } catch (JAXBException | IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return product;
     }
 }

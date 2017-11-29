@@ -3,8 +3,11 @@ package main.java.com.epam.service;
 import main.java.com.epam.entity.Product;
 import main.java.com.epam.list.ProductList;
 import main.java.com.epam.parser.ProjectProperties;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestTemplateService {
     private RestTemplate restTemplate;
@@ -54,6 +57,37 @@ public class RestTemplateService {
         product = restTemplate.getForObject(url, Product.class);
 
         return product;
+    }
+
+    public ResponseEntity modifyProductWithPutRequest(Product product) {
+        HttpEntity<Product> httpEntity;
+        ResponseEntity responseEntity;
+        HttpHeaders requestHeaders = new HttpHeaders();
+        List<MediaType> mediaTypeList = new ArrayList<MediaType>();
+
+        mediaTypeList.add(MediaType.APPLICATION_JSON);
+        requestHeaders.setAccept(mediaTypeList);
+        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpEntity = new HttpEntity<>(product, requestHeaders);
+        responseEntity = restTemplate.exchange(
+                ProjectProperties.getProperties().getProperty("sut.url"), HttpMethod.PUT, httpEntity, Void.class);
+
+        return responseEntity;
+    }
+
+    public ResponseEntity modifyProductWithPutRequest(String url, Product product) {
+        HttpEntity<Product> httpEntity;
+        ResponseEntity responseEntity;
+        HttpHeaders requestHeaders = new HttpHeaders();
+        List<MediaType> mediaTypeList = new ArrayList<MediaType>();
+
+        mediaTypeList.add(MediaType.APPLICATION_JSON);
+        requestHeaders.setAccept(mediaTypeList);
+        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpEntity = new HttpEntity<>(product, requestHeaders);
+        responseEntity = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Void.class);
+
+        return responseEntity;
     }
 
     public String getResponseEntityAsString() {

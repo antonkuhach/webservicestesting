@@ -16,7 +16,7 @@ import java.io.File;
 
 public class XMLService {
 
-    public static void validateXmlStringAgainstXSD(String xml)
+    public static void validateProjectListXmlStringAgainstXSD(String xml)
     {
         final String SCHEMA_LOCATION = "data/product-list-pojo-schema.xsd";
         final String ROOT_ELEMENT = "PRODUCTList";

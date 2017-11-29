@@ -1,7 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Webservices suite">
 
-    <test name="RestTemplate Test">
+    <test name="RestTemplateService Test">
         <classes>
             <class name="test.java.RestTemplateServiceTest"/>
         </classes>
