@@ -3,17 +3,15 @@ package test.java;
 import main.java.com.epam.entity.Product;
 import main.java.com.epam.list.ProductList;
 import main.java.com.epam.service.RestTemplateService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import main.java.com.epam.util.ProductUtil;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public class RestTemplateServiceTest extends BaseTest {
     private RestTemplateService restTemplateService;
     private ProductList productList;
+    private Product product;
 
     @BeforeClass
     public void setup() {
@@ -27,21 +25,20 @@ public class RestTemplateServiceTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "restTemplateTest")
-    public void modifyEntityWithPutRequest() {
-        double RANGE_MIN = 200;
-        double RANGE_MAX = 39387457;
-        double expectedPrice;
-        int productIndex;
-        ResponseEntity responseEntity;
-        double actualPrice;
+    public void createProductWithPostRequestTest() {
+        Product productToCreate;
 
-        expectedPrice = ThreadLocalRandom.current().nextDouble(RANGE_MIN, RANGE_MAX);
-        productIndex = ThreadLocalRandom.current().nextInt(0, productList.getProducts().size() - 1);
-        productList.getProducts().get(productIndex).setPrice(expectedPrice);
-        responseEntity = restTemplateService.modifyProductWithPutRequest(productList.getProducts().get(productIndex));
-        actualPrice = restTemplateService.getProductFromResponseBody(productIndex).getPrice();
-        Assert.assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
-        Assert.assertEquals(actualPrice, expectedPrice);
+        productToCreate = ProductUtil.getRandomlyGeneratedProduct(productList.getProducts().size());
+        restTemplateService.createProductWithPostRequest(productToCreate);
+        product = restTemplateService.getProductFromResponseBody(productToCreate.getId());
+
+        Assert.assertEquals(productToCreate, product);
     }
 
+    @Test(dependsOnMethods = "createProductWithPostRequestTest")
+    public void deleteProductTest() {
+        restTemplateService.deleteProduct(productList.getProducts().size());
+        Assert.assertNotEquals(productList.getProducts().size(),
+                restTemplateService.getProductListFromResponseBody().getProducts().size());
+    }
 }

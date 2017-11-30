@@ -90,6 +90,32 @@ public class RestTemplateService {
         return responseEntity;
     }
 
+    public void createProductWithPostRequest(String url, Product product) {
+        HttpEntity<Product> httpEntity;
+        HttpHeaders requestHeaders = new HttpHeaders();
+
+        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpEntity = new HttpEntity<>(product, requestHeaders);
+        restTemplate.postForObject(url, httpEntity, String.class);
+    }
+
+    public void createProductWithPostRequest(Product product) {
+        HttpEntity<Product> httpEntity;
+        HttpHeaders requestHeaders = new HttpHeaders();
+
+        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpEntity = new HttpEntity<>(product, requestHeaders);
+        restTemplate.postForObject(ProjectProperties.getProperties().getProperty("sut.url"), httpEntity, Void.class);
+    }
+
+    public void deleteProduct(int index) {
+        restTemplate.delete(ProjectProperties.getProperties().getProperty("sut.url") + "/" + index);
+    }
+
+    public void deleteProduct(String url) {
+        restTemplate.delete(url);
+    }
+
     public String getResponseEntityAsString() {
         String result;
         ResponseEntity<String> response;

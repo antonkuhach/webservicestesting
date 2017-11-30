@@ -1,10 +1,10 @@
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="PRODUCT">
-        <xs:complexType>
+        <xs:complexType mixed="true">
             <xs:sequence>
-                <xs:element type="xs:byte" name="ID"/>
+                <xs:element type="xs:integer" name="ID"/>
                 <xs:element type="xs:string" name="NAME"/>
-                <xs:element type="xs:float" name="PRICE"/>
+                <xs:element type="xs:double" name="PRICE"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
