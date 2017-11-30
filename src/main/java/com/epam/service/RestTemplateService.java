@@ -4,6 +4,7 @@ import main.java.com.epam.entity.Product;
 import main.java.com.epam.list.ProductList;
 import main.java.com.epam.parser.ProjectProperties;
 import org.springframework.http.*;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -104,8 +105,12 @@ public class RestTemplateService {
         HttpHeaders requestHeaders = new HttpHeaders();
 
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpEntity = new HttpEntity<>(product, requestHeaders);
-        restTemplate.postForObject(ProjectProperties.getProperties().getProperty("sut.url"), httpEntity, Void.class);
+        httpEntity = new HttpEntity<>(product);
+        try {
+            restTemplate.postForEntity(ProjectProperties.getProperties().getProperty("sut.url"), httpEntity, String.class);
+        } catch (RestClientException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void deleteProduct(int index) {

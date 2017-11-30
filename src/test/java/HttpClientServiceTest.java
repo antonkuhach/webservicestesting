@@ -33,7 +33,7 @@ public class HttpClientServiceTest extends BaseTest {
         statusCode = httpClientService.createProductWithPost(productToCreate);
         Assert.assertEquals(statusCode, 201, "Product creation failed!");
         product = httpClientService.getProductFromValidatedGetResponse(productList.getProducts().size());
-        Assert.assertEquals(product, productToCreate, "Created product differs with source one!");
+        Assert.assertEquals(product, productToCreate, "Created product differs with the source one!");
     }
 
     @Test(dependsOnMethods = "createProductWithPostRequestTest")

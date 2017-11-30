@@ -19,26 +19,32 @@ public class RestTemplateServiceTest extends BaseTest {
     }
 
     @Test
-    public void restTemplateTest() {
+    public void restTemplateGetTest() {
         productList = restTemplateService.getProductListFromResponseBody();
         Assert.assertNotNull(productList, "Received response has empty body!");
     }
 
-    @Test(dependsOnMethods = "restTemplateTest")
+    @Test(dependsOnMethods = "restTemplateGetTest")
     public void createProductWithPostRequestTest() {
         Product productToCreate;
+        ProductList productListAfterCreate;
 
         productToCreate = ProductUtil.getRandomlyGeneratedProduct(productList.getProducts().size());
         restTemplateService.createProductWithPostRequest(productToCreate);
         product = restTemplateService.getProductFromResponseBody(productToCreate.getId());
-
-        Assert.assertEquals(productToCreate, product);
+        productListAfterCreate = restTemplateService.getProductListFromResponseBody();
+        Assert.assertNotEquals(productListAfterCreate.getProducts().size(), productList.getProducts().size(),
+                "Product list has not changed after creating new product!");
+        Assert.assertEquals(productToCreate, product, "Created object and source object differ!");
     }
 
     @Test(dependsOnMethods = "createProductWithPostRequestTest")
     public void deleteProductTest() {
+        ProductList productListAfterDelete;
+
         restTemplateService.deleteProduct(productList.getProducts().size());
-        Assert.assertNotEquals(productList.getProducts().size(),
-                restTemplateService.getProductListFromResponseBody().getProducts().size());
+        productListAfterDelete = restTemplateService.getProductListFromResponseBody();
+        Assert.assertEquals(productList.getProducts().size(), productListAfterDelete.getProducts().size(),
+                "Product list size has not returned to initial state after deleting product!");
     }
 }
