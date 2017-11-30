@@ -96,8 +96,12 @@ public class RestTemplateService {
         HttpHeaders requestHeaders = new HttpHeaders();
 
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpEntity = new HttpEntity<>(product, requestHeaders);
-        restTemplate.postForObject(url, httpEntity, String.class);
+        httpEntity = new HttpEntity<>(product);
+        try {
+            restTemplate.postForEntity(url, httpEntity, String.class);
+        } catch (RestClientException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void createProductWithPostRequest(Product product) {
