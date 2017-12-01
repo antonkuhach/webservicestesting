@@ -3,11 +3,9 @@ package main.java.com.epam.service;
 import main.java.com.epam.entity.Product;
 import main.java.com.epam.list.ProductList;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.*;
-import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
