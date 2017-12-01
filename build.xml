@@ -3,7 +3,7 @@
     <!-- set global properties for build -->
     <property name="basedir" value="." />
     <property name="lib" value="${basedir}/lib" />
-    <property name="src" value="${basedir}/src" />
+    <property name="src.dir" value="${basedir}/src" />
     <property name="bin" value="${basedir}/bin" />
     <property name="ivy.install.version" value="2.4.0" />
     <condition property="ivy.home" value="${env.IVY_HOME}">
@@ -13,7 +13,8 @@
     <property name="ivy.jar.dir" value="${ivy.home}/lib" />
     <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
     <property name="suite.dir" value="${basedir}/suite" />
-    <property name="test.classes.dir" value="${src}/test/java" />
+    <property name="test.classes.dir" value="${src.dir}/test/java" />
+    <property name="build.dir" value="${basedir}/build" />
     <property name="report.dir" value="${basedir}/report" />
 
     <!-- ====== Set the classpath ====  -->
@@ -68,8 +69,11 @@
     </target>
 
     <target name="compile" depends="create,init-ivy">
-        <javac srcdir="${src}" classpathref="classpath" includeAntRuntime="No" destdir="${bin}" />
+        <javac srcdir="${src.dir}" classpathref="classpath" includeAntRuntime="No" destdir="${bin}" />
         <echo> /* Compiled Directory Classes */ </echo>
+        <copy todir="${build.dir}" overwrite="true">
+            <fileset dir="${src.dir}" excludes="**/*.java"/>
+        </copy>
     </target>
 
     <taskdef name="testng" classname="org.testng.TestNGAntTask">
@@ -78,14 +82,12 @@
 
     <target name="testng" depends="compile">
 
-        <!-- Assume test.path contains the project library dependencies -->
         <testng classpathref="test.path"
                 outputDir="${report.dir}"
                 haltOnFailure="true">
 
         <classpath location="${test.classes.dir}" />
 
-        <!-- Tell Ant where is testng.xml -->
         <xmlfileset dir="${suite.dir}" includes="webservices-testng-suite.xml"/>
 
         </testng>
