@@ -10,7 +10,7 @@
     </appender>
 
     <appender name="file" class="org.apache.log4j.RollingFileAppender">
-        <param name="File" value="log/log.log" />
+        <param name="File" value="report/log/log.log" />
         <param name="Append" value="true" />
         <param name="ImmediateFlush" value="true" />
         <param name="MaxFileSize" value="10MB" />

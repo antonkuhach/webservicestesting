@@ -12,9 +12,19 @@
     <property name="ivy.home" value="${user.home}/.ant" />
     <property name="ivy.jar.dir" value="${ivy.home}/lib" />
     <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+    <property name="suite.dir" value="${basedir}/suite" />
+    <property name="test.classes.dir" value="${src}/test/java" />
+    <property name="report.dir" value="${basedir}/report" />
 
     <!-- ====== Set the classpath ====  -->
     <path id="classpath">
+        <pathelement location="${bin}/test/java" />
+        <fileset dir="${lib}">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <path id="test.path">
         <pathelement location="${bin}" />
         <fileset dir="${lib}">
             <include name="*.jar" />
@@ -60,6 +70,26 @@
     <target name="compile" depends="create,init-ivy">
         <javac srcdir="${src}" classpathref="classpath" includeAntRuntime="No" destdir="${bin}" />
         <echo> /* Compiled Directory Classes */ </echo>
+    </target>
+
+    <taskdef name="testng" classname="org.testng.TestNGAntTask">
+        <classpath location="lib/testng-6.8.jar" />
+    </taskdef>
+
+    <target name="testng" depends="compile">
+
+        <!-- Assume test.path contains the project library dependencies -->
+        <testng classpathref="test.path"
+                outputDir="${report.dir}"
+                haltOnFailure="true">
+
+        <classpath location="${test.classes.dir}" />
+
+        <!-- Tell Ant where is testng.xml -->
+        <xmlfileset dir="${suite.dir}" includes="webservices-testng-suite.xml"/>
+
+        </testng>
+
     </target>
 
 </project>
