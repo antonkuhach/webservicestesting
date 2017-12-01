@@ -6,14 +6,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import javax.xml.bind.*;
 import javax.xml.namespace.QName;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
+import java.io.StringReader;
 
 public class XMLService {
 
@@ -42,17 +41,15 @@ public class XMLService {
     public static boolean validateProductXmlStringAgainstXSD(final String xmlString)
     {
         final String SCHEMA_LOCATION = "data/product-pojo-schema.xsd";
-        final String ROOT_ELEMENT = "PRODUCT";
         boolean result = true;
 
         try {
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = schemaFactory.newSchema(new File(SCHEMA_LOCATION));
             JAXBContext jc = JAXBContext.newInstance(Product.class);
-            JAXBElement<String> jaxbElement = new JAXBElement(new QName(ROOT_ELEMENT), String.class, xmlString);
-            Marshaller marshaller = jc.createMarshaller();
-            marshaller.setSchema(schema);
-            marshaller.marshal(jaxbElement, new DefaultHandler());
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            unmarshaller.setSchema(schema);
+            unmarshaller.unmarshal(new StreamSource(new StringReader(xmlString)), Product.class);
         } catch (JAXBException | SAXException ex) {
             ex.printStackTrace();
             result = false;
