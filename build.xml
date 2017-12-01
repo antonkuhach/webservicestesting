@@ -4,7 +4,7 @@
     <property name="basedir" value="." />
     <property name="lib" value="${basedir}/lib" />
     <property name="src.dir" value="${basedir}/src" />
-    <property name="bin" value="${basedir}/bin" />
+    <property name="build.dir" value="${basedir}/build" />
     <property name="ivy.install.version" value="2.4.0" />
     <condition property="ivy.home" value="${env.IVY_HOME}">
         <isset property="env.IVY_HOME" />
@@ -14,19 +14,18 @@
     <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
     <property name="suite.dir" value="${basedir}/suite" />
     <property name="test.classes.dir" value="${src.dir}/test/java" />
-    <property name="build.dir" value="${basedir}/build" />
     <property name="report.dir" value="${basedir}/report" />
 
     <!-- ====== Set the classpath ====  -->
     <path id="classpath">
-        <pathelement location="${bin}/test/java" />
+        <pathelement location="${build.dir}/test/java" />
         <fileset dir="${lib}">
             <include name="*.jar" />
         </fileset>
     </path>
 
     <path id="test.path">
-        <pathelement location="${bin}" />
+        <pathelement location="${build.dir}" />
         <fileset dir="${lib}">
             <include name="*.jar" />
         </fileset>
@@ -56,12 +55,12 @@
 
     <!-- Delete directories  -->
     <target name="delete-dir">
-        <delete dir="${bin}" />
+        <delete dir="${build.dir}" />
     </target>
 
     <!-- Creating directories -->
     <target name="create" depends="delete-dir">
-        <mkdir dir="${bin}" />
+        <mkdir dir="${build.dir}" />
     </target>
 
     <target name="resolve" description="--> retrieve dependencies with ivy">
@@ -69,7 +68,7 @@
     </target>
 
     <target name="compile" depends="create,init-ivy">
-        <javac srcdir="${src.dir}" classpathref="classpath" includeAntRuntime="No" destdir="${bin}" />
+        <javac srcdir="${src.dir}" classpathref="classpath" includeAntRuntime="No" destdir="${build.dir}" />
         <echo> /* Compiled Directory Classes */ </echo>
         <copy todir="${build.dir}" overwrite="true">
             <fileset dir="${src.dir}" excludes="**/*.java"/>
